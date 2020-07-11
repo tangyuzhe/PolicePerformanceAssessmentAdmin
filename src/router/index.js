@@ -133,67 +133,57 @@ export default new Router({
           ]
         },
         {
-          path: 'result',
-          name: '结果页',
-          meta: {
-            icon: 'check-circle-o',
-          },
-          component: PageView,
-          children: [
-            {
-              path: 'success',
-              name: '成功',
-              component: () => import('@/pages/result/Success')
-            },
-            {
-              path: 'error',
-              name: '失败',
-              component: () => import('@/pages/result/Error')
-            }
-          ]
-        },
-        {
-          path: 'exception',
-          name: '异常页',
-          meta: {
-            icon: 'warning',
-          },
-          component: BlankView,
-          children: [
-            {
-              path: '404',
-              name: '404',
-              component: () => import('@/pages/exception/404')
-            },
-            {
-              path: '403',
-              name: '403',
-              component: () => import('@/pages/exception/403')
-            },
-            {
-              path: '500',
-              name: '500',
-              component: () => import('@/pages/exception/500')
-            }
-          ]
-        },
-        {
-          path: 'components',
-          name: '小组件',
+          path: 'department',
+          name: '部门管理',
           meta: {
             icon: 'appstore-o'
           },
           component: PageView,
           children: [
             {
-              path: 'taskCard',
-              name: '任务卡片',
-              component: () => import('@/pages/components/TaskCard')
+              path: 'department',
+              name: '部门列表',
+              component: () => import('@/pages/department/departments')
             },
             {
-              path: 'palette',
-              name: '颜色复选框',
-              component: () => import('@/pages/components/Palette')
+              path: 'departmentMembers',
+              name: '部门成员',
+              component: () => import('@/pages/department/departmentMembers')
+            }
+          ]
+        },
+        {
+          path: 'assessment',
+          name: '考核管理',
+          meta: {
+            icon: 'appstore-o'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'list',
+              name: '考核列表',
+              component: () => import('@/pages/assessManagement/assessment')
+            },
+            {
+              path: 'personalAssess',
+              name: '个人绩效查询',
+              component: () => import('@/pages/assessManagement/personalAssess')
+            }
+          ]
+        },
+        {
+          path: 'case',
+          name: '案件管理',
+          meta: {
+            icon: 'appstore-o'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'list',
+              name: '案件列表',
+              component: () => import('@/pages/case/caseList')
             }
           ]
         }
