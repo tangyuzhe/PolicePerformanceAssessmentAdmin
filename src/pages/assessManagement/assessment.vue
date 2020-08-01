@@ -1,8 +1,7 @@
 <template>
   <div>
     <a-card :bordered="false">
-      <a-input placeholder="请输入查询的部门id" style="width:150px" v-model="departmentId" />
-      <a-button type="primary" style="margin-top:5px" @click="SearchDepartment">查询</a-button>
+      <a-date-picker suffix-icon="ab" @change="selectTime" />
       <a-table :columns="columns" :data-source="loadData">
         <a slot="name" slot-scope="text">{{ text }}</a>
         <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
@@ -82,6 +81,15 @@ export default {
           this.loadData.push(res.data);
         });
       }
+    },
+
+    async selectTime(date, dateString) {
+      console.log(date);
+      this.loadData = [];
+      await getRequest("/depart/getNotice/" + dateString).then(res => {
+        console.log(res);
+        this.loadData = res.data;
+      });
     },
 
     edit(record) {

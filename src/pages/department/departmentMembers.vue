@@ -26,12 +26,8 @@ const columns = [
     scopedSlots: { customRender: "serial" }
   },
   {
-    title: "用户id",
-    dataIndex: "uid"
-  },
-  {
     title: "姓名",
-    dataIndex: "name"
+    dataIndex: "NAME"
     // scopedSlots: { customRender: 'status' }
   },
   {
@@ -39,16 +35,12 @@ const columns = [
     dataIndex: "phone"
   },
   {
-    title: "部门id",
-    dataIndex: "departId"
-    // scopedSlots: { customRender: 'description' }
+    title: "部门",
+    dataIndex: "departName"
   },
   {
-    title: "顶层部门id",
-    dataIndex: "topDepartId"
-    // sorter: true,
-    // needTotal: true,
-    // customRender: text => text + ' 次'
+    title: "顶层部门",
+    dataIndex: "topDepartName"
   },
   {
     title: "总得分",

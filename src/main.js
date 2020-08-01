@@ -25,12 +25,28 @@ const i18n = new VueI18n({
   silentFallbackWarn: true
 })
 
+router.beforeEach((to, from, next) => {
+  console.log(to.meta);
+  const token = sessionStorage.getItem("access_token")
+  if (to.meta.requireAuth) {
+    console.log(token);
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
+})
+export default router;
+
 new Vue({
   router,
   store,
   i18n,
   render: h => h(App),
-  mounted () {
+  mounted() {
     let db = new PouchDB('adminDb')
     db.get('currUser').then(doc => {
       this.$store.commit('account/setUser', doc.user)

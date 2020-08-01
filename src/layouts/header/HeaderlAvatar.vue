@@ -1,13 +1,15 @@
 <template>
   <a-dropdown>
     <div class="header-avatar" style="cursor: pointer">
-      <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar"/>
+      <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" />
       <span class="name">{{user.name}}</span>
     </div>
     <a-menu :class="['avatar-menu']" slot="overlay">
       <a-menu-item>
-        <a-icon type="user" />
-        <span>个人中心</span>
+        <router-link to="/personal">
+          <a-icon type="user" />
+          <span>个人中心</span>
+        </router-link>
       </a-menu-item>
       <a-menu-item>
         <a-icon type="setting" />
@@ -15,7 +17,7 @@
       </a-menu-item>
       <a-menu-divider />
       <a-menu-item>
-        <router-link to="/login">
+        <router-link to="/login" @click.native="clearToken">
           <a-icon type="poweroff" />
           <span>退出登录</span>
         </router-link>
@@ -25,32 +27,37 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  name: 'HeaderAvatar',
+  name: "HeaderAvatar",
   computed: {
-    ...mapState('setting', ['weekMode']),
-    ...mapState('account', ['user']),
+    ...mapState("setting", ["weekMode"]),
+    ...mapState("account", ["user"])
+  },
+  methods: {
+    clearToken() {
+      sessionStorage.removeItem("access_token");
+    }
   }
-}
+};
 </script>
 
 <style lang="less">
-  .header-avatar{
-    display: inline-flex;
-    .avatar, .name{
-      align-self: center;
-    }
-    .avatar{
-      margin-right: 8px;
-    }
-    .name{
-      font-weight: 500;
-    }
+.header-avatar {
+  display: inline-flex;
+  .avatar,
+  .name {
+    align-self: center;
   }
-  .avatar-menu{
-    width: 150px;
+  .avatar {
+    margin-right: 8px;
   }
-
+  .name {
+    font-weight: 500;
+  }
+}
+.avatar-menu {
+  width: 150px;
+}
 </style>

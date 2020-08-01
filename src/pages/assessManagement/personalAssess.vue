@@ -25,26 +25,24 @@ const columns = [
     scopedSlots: { customRender: "serial" }
   },
   {
-    title: "用户id",
-    dataIndex: "uid"
+    title: "部门",
+    dataIndex: "departName"
   },
   {
-    title: "部门id",
-    dataIndex: "departId"
-    // scopedSlots: { customRender: 'status' }
+    title: "姓名",
+    dataIndex: "userName"
   },
   {
     title: "绩效id",
-    dataIndex: "performId"
+    dataIndex: "perform_id"
   },
   {
     title: "绩效得分",
-    dataIndex: "performScore"
-    // scopedSlots: { customRender: 'description' }
+    dataIndex: "perform_score"
   },
   {
     title: "录入时间",
-    dataIndex: "updateTime"
+    dataIndex: "update_time"
   }
 ];
 

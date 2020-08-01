@@ -27,37 +27,29 @@ const columns = [
   },
   {
     title: "部门id",
-    dataIndex: "departId"
+    dataIndex: "depart_id"
   },
   {
     title: "部门名称",
-    dataIndex: "departName"
+    dataIndex: "depart_name"
     // scopedSlots: { customRender: 'status' }
   },
   {
     title: "部门负责人",
-    dataIndex: "departAdminId"
+    dataIndex: "userName"
   },
   {
     title: "部门地址",
-    dataIndex: "departAddress"
+    dataIndex: "depart_address"
     // scopedSlots: { customRender: 'description' }
   },
   {
     title: "部门描述",
-    dataIndex: "departInfo"
-    // sorter: true,
-    // needTotal: true,
-    // customRender: text => text + ' 次'
-  },
-  {
-    title: "活动简介",
-    dataIndex: "introduction"
-    // sorter: true
+    dataIndex: "depart_info"
   },
   {
     title: "上级部门",
-    dataIndex: "parentDepartId"
+    dataIndex: "parentName"
   }
 ];
 

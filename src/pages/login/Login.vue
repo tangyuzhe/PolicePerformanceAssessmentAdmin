@@ -88,10 +88,11 @@ export default {
             this.logging = false;
             console.log(res.status);
             if (res) {
-              localStorage.setItem("access_token", res.access_token);
+              sessionStorage.setItem("access_token", res.access_token);
+              localStorage.setItem("uid", res.uid);
               this.$message.success("登录成功");
               setTimeout(() => {
-                this.$router.push("/dashboard/workplace");
+                this.$router.push("/personal");
               }, 1000);
             }
           });

@@ -1,75 +1,68 @@
 <template>
   <div>
     <a-card :bordered="false">
-      <a-button type="primary">
-        上传案件
-        <a-icon type="upload"></a-icon>
-      </a-button>
       <a-table :columns="columns" :data-source="loadData">
         <a slot="name" slot-scope="text">{{ text }}</a>
         <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-        <span slot="caseUpdateTime" slot-scope="text">{{text}}</span>
-        <span slot="caseAttachmentsUrl" slot-scope="text">
+        <span slot="newsFrom" slot-scope="text">
+          <a :href="text">{{text}}</a>
+        </span>
+        <span slot="picUrl" slot-scope="text">
           <img :src="text" alt width="50" height="50" />
         </span>
-        <span slot="caseStatus" slot-scope="text">{{selectCaseStatus(text)}}</span>
-        <span slot="action" slot-scope="text, record">
-          <a-button-group style="float:left;">
-            <a-button type="primary" @click="review(record)">任务详情</a-button>
-            <a-button
-              type="primary"
-              @click="receiveCase(record)"
-              :disabled="record.caseStatus!='noTreatment'?true:false"
-            >接受案件</a-button>
-          </a-button-group>
+        <span slot="editTime" slot-scope="text">{{text}}</span>
+        <span slot="action">
+          <a-button-group style="float:left;"></a-button-group>
         </span>
       </a-table>
     </a-card>
-
-    <TaskInfo :show.sync="taskinfo_visible" :task_id="task_id"></TaskInfo>
   </div>
 </template>
 
 <script>
 import { getRequest } from "../../api/request";
-import TaskInfo from "./components/taskInfo";
 const columns = [
   {
     title: "序号",
     scopedSlots: { customRender: "serial" }
   },
   {
-    title: "案件id",
-    dataIndex: "caseId"
+    title: "新闻id",
+    dataIndex: "newsId"
   },
   {
-    title: "案件种类名称",
-    dataIndex: "caseTypeName"
+    title: "新闻标题",
+    dataIndex: "title"
   },
   {
-    title: "案件详细描述",
-    dataIndex: "caseInfo"
-    // scopedSlots: { customRender: 'description' }
+    title: "新闻作者id",
+    dataIndex: "editorId"
   },
   {
-    title: "更新时间",
-    dataIndex: "caseUpdateTime",
-    scopedSlots: { customRender: "caseUpdateTime" }
+    title: "记者姓名id",
+    dataIndex: "reporterId"
   },
   {
-    title: "案件当前状态",
-    dataIndex: "caseStatus",
-    scopedSlots: { customRender: "caseStatus" }
-    // sorter: true
+    title: "类型id",
+    dataIndex: "sectionId"
   },
   {
-    title: "审核时间",
-    dataIndex: "reviewTime"
+    title: "时间",
+    dataIndex: "editTime"
   },
   {
-    title: "案件",
-    dataIndex: "caseAttachmentsUrl",
-    scopedSlots: { customRender: "caseAttachmentsUrl" }
+    title: "浏览次数",
+    dataIndex: "clickNum"
+  },
+  {
+    title: "新闻",
+    dataIndex: "picUrl",
+    scopedSlots: { customRender: "picUrl" }
+  },
+  {
+    title: "新闻来源",
+    dataIndex: "newsFrom",
+    scopedSlots: { customRender: "newsFrom" }
   },
   {
     title: "操作",
@@ -79,23 +72,23 @@ const columns = [
 ];
 
 export default {
-  name: "Assessment",
-  components: {
-    TaskInfo
-  },
+  name: "NewsList",
+  components: {},
   data() {
     return {
       columns,
-      loadData: [],
-      taskinfo_visible: false,
-      task_id: null
+      loadData: []
     };
   },
   methods: {
     async queryData() {
-      await getRequest("/case/getCase").then(res => {
+      await getRequest("/news/listNews").then(res => {
         this.loadData = res.data;
       });
+    },
+
+    formateDate(time) {
+      return time * 10;
     },
 
     review(record) {
@@ -123,6 +116,7 @@ export default {
   },
   created() {
     console.log(this.queryData());
+    console.log(Date("Y-m-d H:i:s", 1156219870));
   },
   computed: {
     rowSelection() {
