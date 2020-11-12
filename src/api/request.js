@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-const baseUrl = 'https://api.pesystem.linaxhua.cn/api'
+const baseUrl = 'http://sec.linaxhua.cn/api'
 const token = sessionStorage.getItem('access_token')
 const getRequest = (url, params = {}) => {
   return new Promise((resolve, reject) => {
@@ -10,6 +10,24 @@ const getRequest = (url, params = {}) => {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'bearer ' + token
+      }
+    })
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((res) => {
+        reject(res)
+      })
+  })
+}
+
+const getRequestWithoutToken = (url, params = {}) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: baseUrl + url + qs.stringify(params),
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json'
       }
     })
       .then((res) => {
@@ -62,5 +80,6 @@ const patchRequest = (url, params = {}) => {
 export {
   getRequest,
   postRequest,
-  patchRequest
+  patchRequest,
+  getRequestWithoutToken
 }

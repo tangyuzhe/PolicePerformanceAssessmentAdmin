@@ -25,21 +25,21 @@ const i18n = new VueI18n({
   silentFallbackWarn: true
 })
 
-router.beforeEach((to, from, next) => {
-  console.log(to.meta);
-  const token = sessionStorage.getItem("access_token")
-  if (to.meta.requireAuth) {
-    console.log(token);
-    if (token) {
-      next()
-    } else {
-      next('/login')
-    }
-  } else {
-    next()
-  }
-})
-export default router;
+// router.beforeEach((to, from, next) => {
+//   console.log(to.meta);
+//   const token = sessionStorage.getItem("access_token")
+//   if (to.meta.requireAuth) {
+//     console.log(token);
+//     if (token) {
+//       next()
+//     } else {
+//       next('/login')
+//     }
+//   } else {
+//     next()
+//   }
+// })
+// export default router;
 
 new Vue({
   router,
