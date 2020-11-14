@@ -58,6 +58,25 @@ const postRequest = (url, params = {}) => {
   })
 }
 
+const postRequestWithoutToken = (url, params = {}) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: baseUrl + url ,
+      data:params,
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((res) => {
+        reject(res)
+      })
+  })
+}
+
 const patchRequest = (url, params = {}) => {
   return new Promise((resolve, reject) => {
     axios({
@@ -81,5 +100,6 @@ export {
   getRequest,
   postRequest,
   patchRequest,
-  getRequestWithoutToken
+  getRequestWithoutToken,
+  postRequestWithoutToken,
 }

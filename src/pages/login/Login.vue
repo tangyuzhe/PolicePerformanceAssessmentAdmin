@@ -8,7 +8,7 @@
       <div class="desc"></div>
     </div>
     <div class="login">
-      <a-form @submit="onSubmit" :autoFormCreate="(form) => (this.form = form)">
+      <a-form @submit="onSubmit">
         <a-tabs
           size="large"
           :tabBarStyle="{ textAlign: 'center' }"
@@ -24,7 +24,6 @@
               style="margin-bottom: 24px"
             />
             <a-form-item
-              fieldDecoratorId="name"
               :fieldDecoratorOptions="{
                 rules: [
                   { required: true, message: '请输入账户名', whitespace: true },
@@ -36,7 +35,6 @@
               </a-input>
             </a-form-item>
             <a-form-item
-              fieldDecoratorId="password"
               :fieldDecoratorOptions="{
                 rules: [
                   { required: true, message: '请输入密码', whitespace: true },
@@ -77,7 +75,7 @@
                 <a-textarea
                   placeholder="请详细说明案件"
                   :auto-size="{ minRows: 3 }"
-                  v-model="Case.caseInfo"
+                  v-model="Case['caseInfo']"
                 />
               </a-form-item>
 
@@ -107,7 +105,12 @@
 
 <script>
 import CommonLayout from "@/layouts/CommonLayout";
-import { postRequest, getRequestWithoutToken } from "../../api/request";
+import OSS from "ali-oss";
+import {
+  postRequest,
+  getRequestWithoutToken,
+  postRequestWithoutToken,
+} from "../../api/request";
 export default {
   name: "Login",
   components: { CommonLayout },
@@ -120,8 +123,14 @@ export default {
         caseTypeId: 0,
         caseTypeName: "",
         caseInfo: "",
-        fileUrl: [],
-        caseUpdateTime: new Date(),
+        fileUrl: "",
+        caseUpdateTime: "",
+      },
+      ossConfig: {
+        accessid: "LTAI4GKE4rTz34B75iwTrEkm",
+        accesskey: "fJ8Jy9MT6J8LxHfoPnJbfguI6XUHRr",
+        host: "https://pesystem.oss-cn-hangzhou.aliyuncs.com",
+        bucket: "pesystem",
       },
     };
   },
@@ -145,7 +154,6 @@ export default {
           };
           postRequest("/uaa/oauth/token", data).then((res) => {
             this.logging = false;
-            console.log(res.status);
             if (res) {
               sessionStorage.setItem("access_token", res.access_token);
               localStorage.setItem("uid", res.uid);
@@ -164,16 +172,84 @@ export default {
       });
     },
     selectType(value) {
-      this.Case.caseTypeName = value;
+      this.Case["caseTypeName"] = value;
       this.caseType.forEach((item) => {
         if (item.caseTypeName == value) {
-          this.Case.caseTypeId = item.caseTypeId;
+          this.Case["caseTypeId"] = item.caseTypeId;
         }
       });
     },
-    uploadFile() {},
-    submitCase() {
-      console.log(this.Case);
+    async uploadFile(value) {
+      const data = {
+        fileName: value.fileList[0].name,
+        fileType: "",
+        uid: 0,
+        priority: 6,
+      };
+      let url = "";
+      if (value.fileList[0].type.substr(0, 5) == "video") {
+        data.fileType = "video";
+      } else {
+        data.fileType = "file";
+      }
+      await postRequestWithoutToken("/case/uploadFile", data).then((res) => {
+        console.log(res);
+        if (res.code == 200) {
+          this.Case.fileUrl =
+            "https://pesystem.oss-cn-hangzhou.aliyuncs.com/" + res.data.fileUrl;
+        }
+        url = res.data.fileUrl;
+      });
+      let client = new OSS({
+        accessKeyId: this.ossConfig.accessid,
+        accessKeySecret: this.ossConfig.accesskey,
+        bucket: this.ossConfig.bucket,
+        success_action_status: "200",
+        region: "oss-cn-hangzhou",
+      });
+      client
+        .multipartUpload(url, value)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async submitCase() {
+      this.Case["caseUpdateTime"] = this.formatTime(
+        "YYYY-mm-dd HH:MM:SS",
+        new Date()
+      );
+      await postRequestWithoutToken("/case/addCase", this.Case).then((res) => {
+        if (res.code == 200) {
+          this.$message.info(res.addtionalInfo);
+          setTimeout(() => {
+            this.Case = {};
+          }, 1000);
+        }
+      });
+    },
+    formatTime(fmt, date) {
+      let ret;
+      const opt = {
+        "Y+": date.getFullYear().toString(), // 年
+        "m+": (date.getMonth() + 1).toString(), // 月
+        "d+": date.getDate().toString(), // 日
+        "H+": date.getHours().toString(), // 时
+        "M+": date.getMinutes().toString(), // 分
+        "S+": date.getSeconds().toString(), // 秒
+      };
+      for (let k in opt) {
+        ret = new RegExp("(" + k + ")").exec(fmt);
+        if (ret) {
+          fmt = fmt.replace(
+            ret[1],
+            ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, "0")
+          );
+        }
+      }
+      return fmt;
     },
   },
   mounted() {
