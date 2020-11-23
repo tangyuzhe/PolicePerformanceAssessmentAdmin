@@ -126,12 +126,7 @@ export default {
         fileUrl: "",
         caseUpdateTime: "",
       },
-      ossConfig: {
-        accessid: "LTAI4GKE4rTz34B75iwTrEkm",
-        accesskey: "fJ8Jy9MT6J8LxHfoPnJbfguI6XUHRr",
-        host: "https://pesystem.oss-cn-hangzhou.aliyuncs.com",
-        bucket: "pesystem",
-      },
+
     };
   },
   computed: {
